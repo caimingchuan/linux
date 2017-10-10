@@ -1,12 +1,15 @@
 
 CC:= gcc
+
 HEAD := $(wildcard *.h)
 
 SRCS := $(wildcard *.c)
 
 OBJS := $(SRCS:.c=.o)
 
-TARGET := calculate
+OBJD := $(SRCS:.c=.d)
+
+TARGET := $(shell pwd | sed 's/\(.*\)[/]//g')
 
 INCLUDE_PATH += .
 
@@ -16,13 +19,16 @@ ifeq (1, $(DEBUG))
 	CFLAGS += -DDEBUG
 endif
 
-LIB += 
+LIB += pthread 
 
 libopts += $(addprefix -l, $(LIB))
 
 CFLAGS += $(foreach dir, $(INCLUDE_PATH), -I$(dir))
 
 CFLAGS += $(foreach lib, $(LIB_PATH), -L$(lib))
+
+CFLAGS += -DDEBUG 
+
 
 all: $(SRCS) $(HEAD)
 	@-$(CC)  $(CFLAGS) -c $(SRCS) $(libopts)
@@ -39,7 +45,7 @@ debug: $(SRCS) $(HEAD)
 
 	
 cp:
-	cp $(TARGET) ~/work/
+	cp $(TARGET) ~/windows/S7DL/
 	
 clean:
 	-rm ~/work/$(TARGET) $(TARGET)
